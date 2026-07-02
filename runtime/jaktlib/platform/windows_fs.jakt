@@ -30,6 +30,22 @@ fn make_directory(path: String) throws {
     }
 }
 
+fn path_is_directory(path: Path) -> bool {
+    mut data = default_constructed<WIN32_FIND_DATA>()
+    let dir_fd = FindFirstFile(path.to_string().c_string(), &raw data)
+
+    unsafe {
+        // FIXME: Extern constant support
+        cpp {
+            "if (dir_fd == INVALID_HANDLE_VALUE)"
+            "return false;"
+        }
+    }
+
+    FindClose(dir_fd)
+    return (data.dwFileAttributes & 0x10) != 0
+}
+
 fn real_path(anon path: String) throws -> String {
     let buffer = _fullpath(abs_path: null<raw c_char>(), rel_path: path.c_string(), max_length: 0)
     if buffer == null<raw c_char>() {

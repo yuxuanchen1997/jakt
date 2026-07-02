@@ -5,6 +5,11 @@ fn make_directory(path: String) throws {
     throw Error::from_errno(38)
 }
 
+fn path_is_directory(path: Path) throws -> bool {
+    eprintln("NOT IMPLEMENTED: path_is_directory {}", path)
+    throw Error::from_errno(38)
+}
+
 fn current_directory() throws -> String {
     eprintln("NOT IMPLEMENTED: current_directory")
     throw Error::from_errno(38)

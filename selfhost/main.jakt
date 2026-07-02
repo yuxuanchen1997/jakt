@@ -29,7 +29,7 @@ import types { FunctionId, ResolvedNamespace, ScopeId, ModuleId, Value, ValueImp
 import utility { FileId, Queue, Span, escape_for_quotes, join, write_to_file }
 import git
 
-import platform_fs() { DirectoryIterator, make_directory }
+import platform_fs() { DirectoryIterator, make_directory, path_is_directory }
 
 import platform_compiler() {
     run_compiler
@@ -196,7 +196,7 @@ fn install(from: Path, to: Path) throws {
             let path = directory.join(entry)
             let path_relative_to_target = relative_dir.join(entry)
 
-            if is_directory {
+            if is_directory or path_is_directory(path) {
                 try make_directory(path: to.join(path_relative_to_target.to_string()).to_string())
                 directories_to_copy.enqueue((path, path_relative_to_target))
                 continue

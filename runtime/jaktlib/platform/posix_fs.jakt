@@ -36,6 +36,19 @@ fn make_directory(path: String) throws {
     throw Error::from_errno(errno_value())
 }
 
+fn path_is_directory(path: Path) -> bool {
+    let path_string = path.to_string()
+    mut is_directory = false
+    unsafe {
+        cpp {
+            "struct stat st;"
+            "if (stat(path_string.characters(), &st) == 0 && S_ISDIR(st.st_mode))"
+            "is_directory = true;"
+        }
+    }
+    return is_directory
+}
+
 fn current_directory() throws -> String {
     // Initial guess at path length, resembles PATH_MAX and the page-size of some systems
     mut buffer_size : usize = 4096;
